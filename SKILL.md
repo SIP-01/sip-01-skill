@@ -33,7 +33,7 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 | Task | Do this |
 |---|---|
 | Normalize a URL, compute `d`/`x`, build an event, validate an event, run test vectors | Run `scripts/sip01.py` (zero-dependency; `selftest` runs spec §13 vectors). Byte-compatible with the TS reference — verified against Node's WHATWG URL |
-| Sign/publish the built event, generate an indexer key | Use the `nostr` skill's `nostr_key.py` (sign) and `nostr_query.py` (publish/query) |
+| Sign/publish the built event, generate an indexer key | Use the `nostr` skill's `nostr_key.py` (sign; key argument `-` reads `NOSTR_SECRET_KEY`) and `nostr_query.py` (publish/query) |
 | Exact field rules, normalization steps, deviations, NIP dependency table | Read [references/spec.md](references/spec.md) — the canonical spec (v1.2), verbatim |
 | Publisher/consumer/relay integration walkthroughs, checklists | Read [references/implementation-guide.md](references/implementation-guide.md) — verbatim upstream guide |
 | Ecosystem repos, NIP-50 operator semantics, NIP-11 `uncaged_index` block, kind 16919 heartbeats | Read [references/ecosystem.md](references/ecosystem.md) |
@@ -51,11 +51,12 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 
 ## Quick flows
 
-Publish a crawler observation:
+Publish a crawler observation. The indexer secret stays in `NOSTR_SECRET_KEY`; `-` tells the signer to read that variable and to read the unsigned event from stdin. Do not pass an nsec as an argument.
 ```bash
+export NOSTR_SECRET_KEY   # nsec or hex, set outside the command line
 python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1 \
-  | python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" /dev/stdin   # or jq pipe
-# then nostr_query.py publish wss://<relay> '<signed>'  (2+ relays, incl. one SIP-01-aware)
+  | python3 /path/to/nostr/scripts/nostr_key.py sign - -
+# then nostr_query.py publish wss://<relay> -   (2+ relays, incl. one SIP-01-aware; '-' reads the signed event from stdin)
 ```
 
 Consume:
