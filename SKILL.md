@@ -54,8 +54,9 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 Publish a crawler observation:
 ```bash
 python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1 \
-  | python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" /dev/stdin   # or jq pipe
-# then nostr_query.py publish wss://<relay> '<signed>'  (2+ relays, incl. one SIP-01-aware)
+  | NOSTR_SECRET_KEY="$NSEC" python3 /path/to/nostr/scripts/nostr_key.py sign env -
+# then: nostr_query.py publish wss://<relay> -   (2+ relays, incl. one SIP-01-aware)
+# The nsec stays in the environment. Do not pass it as an argument.
 ```
 
 Consume:
