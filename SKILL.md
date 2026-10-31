@@ -33,7 +33,7 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 | Task | Do this |
 |---|---|
 | Normalize a URL, compute `d`/`x`, build an event, validate an event, run test vectors | Run `scripts/sip01.py` (zero-dependency; `selftest` runs spec §13 vectors). Byte-compatible with the TS reference — verified against Node's WHATWG URL |
-| Sign/publish the built event, generate an indexer key | Use the `nostr` skill's `nostr_key.py` (sign) and `nostr_query.py` (publish/query) |
+| Sign/publish the built event, generate an indexer key | Use the `nostr` skill. `sip01.py build` prints an unsigned event. Sign with `NOSTR_SECRET_KEY` set and `nostr_key.py sign -` (stdin). Publish with `nostr_query.py`. Do not pass the nsec as an argument |
 | Exact field rules, normalization steps, deviations, NIP dependency table | Read [references/spec.md](references/spec.md) — the canonical spec (v1.2), verbatim |
 | Publisher/consumer/relay integration walkthroughs, checklists | Read [references/implementation-guide.md](references/implementation-guide.md) — verbatim upstream guide |
 | Ecosystem repos, NIP-50 operator semantics, NIP-11 `uncaged_index` block, kind 16919 heartbeats | Read [references/ecosystem.md](references/ecosystem.md) |
@@ -53,8 +53,9 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 
 Publish a crawler observation:
 ```bash
+export NOSTR_SECRET_KEY=...   # indexer nsec, process env only, never an argument
 python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1 \
-  | python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" /dev/stdin   # or jq pipe
+  | python3 /path/to/nostr/scripts/nostr_key.py sign -
 # then nostr_query.py publish wss://<relay> '<signed>'  (2+ relays, incl. one SIP-01-aware)
 ```
 
