@@ -1,6 +1,7 @@
 ---
 name: sip-01
 description: "Build, validate, publish, and consume SIP-01 Search Index Protocol events (Nostr kind 39697, Web Index Observations) — the decentralized web-search index by NostrDanish (github.com/NostrDanish/SIP-01). Use whenever the task involves SIP-01, kind 39697, widx: d-tags, URL normalization per SIP-01 §7, x content hashes, decentralized search index events, the UNCAGED index relay / Crawlstr / indexstr / 0xSearchstr / 0xPresearchstr ecosystem, NIP-50 search operators for web documents (site:, domain:, lang:, filetype:), crawler heartbeats (kind 16919), or building a crawler/search-engine/index-relay on this protocol. Triggers on 'SIP-01', 'SIP01', 'widx:', 'kind 39697', 'web index observation', 'UNCAGED', 'Crawlstr', 'indexstr', 'Searchstr'."
+spec_version: "1.2"
 ---
 
 # SIP-01 — Search Index Protocol (kind 39697)
@@ -51,11 +52,14 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 
 ## Quick flows
 
-Publish a crawler observation:
+Publish a crawler observation (`nostr_key.py sign` reads the event as argv[3]
+or `-` / `/dev/stdin` — it does **not** take a leftover path as the JSON):
 ```bash
-python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1 \
-  | python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" /dev/stdin   # or jq pipe
-# then nostr_query.py publish wss://<relay> '<signed>'  (2+ relays, incl. one SIP-01-aware)
+EV=$(python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1)
+python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" "$EV" > signed.json
+# or: python3 scripts/sip01.py build … | python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" -
+python3 /path/to/nostr/scripts/nostr_query.py publish wss://<relay> - < signed.json
+# publish to 2+ relays, including one SIP-01-aware
 ```
 
 Consume:

@@ -1,7 +1,7 @@
 # SIP-01 Implementation Guide
 
 How to publish to, consume, or relay the shared search index. Everything here is
-normative where it restates [the specification](../public/spec/SIP-01.md) — when in
+normative where it restates [the specification](spec.md) — when in
 doubt, the spec wins. Section numbers (`§n`) refer to the spec.
 
 > **Rule zero:** byte-compatibility. If your URL normalization or hashing drifts by
