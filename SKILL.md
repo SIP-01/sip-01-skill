@@ -51,16 +51,17 @@ One addressable event per `(indexer pubkey, normalized URL)`: *"Indexer `pubkey`
 
 ## Quick flows
 
-Publish a crawler observation:
+Publish a crawler observation (`nostr-skill` scripts; `sign` reads the event JSON from stdin when the third arg is `-`):
 ```bash
-python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1 \
-  | python3 /path/to/nostr/scripts/nostr_key.py sign "$NSEC" /dev/stdin   # or jq pipe
-# then nostr_query.py publish wss://<relay> '<signed>'  (2+ relays, incl. one SIP-01-aware)
+EV="$(python3 scripts/sip01.py build "$URL" "$TITLE" --description "$DESC" --topic nostr --lang en --source mycrawler/1)"
+printf '%s\n' "$EV" | python3 /path/to/nostr-skill/scripts/nostr_key.py sign "$NSEC" -
+# then: python3 /path/to/nostr-skill/scripts/nostr_query.py publish wss://<relay> '<signed>'
+# publish to 2+ relays, including one SIP-01-aware
 ```
 
 Consume:
 ```bash
-python3 /path/to/nostr/scripts/nostr_query.py query wss://<relay> '{"kinds":[39697],"#t":["privacy"],"limit":100}'
+python3 /path/to/nostr-skill/scripts/nostr_query.py query wss://<relay> '{"kinds":[39697],"#t":["privacy"],"limit":100}'
 # group by d tag, count distinct pubkey values per d
 ```
 
