@@ -66,7 +66,7 @@ const description = (pageDescription ?? '').trim().slice(0, 1000);
 const d = await documentId(normalized);             // §3
 const x = await contentHash(title, description);    // §8
 
-const event = await signer.signEvent({
+// signer is a trusted signer boundary (for example NIP-46); the agent never sees its secret.\nconst event = await signer.signEvent({
   kind: SIP01_KIND,                                 // 39697
   content: JSON.stringify({ title, ...(description && { description }) }),
   tags: [
