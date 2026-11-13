@@ -93,3 +93,18 @@ The output is unsigned. Do not pipe it into a helper that accepts an nsec argume
 ## Source provenance
 
 For normative answers, note the canonical SIP-01 revision/date and relevant section. For Nostr dependencies, check the current upstream NIPs repository separately. Mark implementation-specific behavior as such.
+
+## Project knowledge and cross-repository conformance integration
+
+When operating in the owner's SIP-01 ecosystem, consult the configured Second Brain / Workbench and GitHub Repository & Build Atlas before proposing or changing protocol, core, crawler, indexer, relay, search-engine or capability-profile behavior. Identify the canonical spec repository, reusable core, affected product repositories, current feature-parity tasks and latest handovers. Search actual code and active branches before creating a new implementation.
+
+A SIP-01 change must be treated as a compatibility change across the ecosystem, not as a single-file edit. Record:
+- canonical specification revision and sections affected;
+- wire/event/tag/schema effect (or explicit statement that there is none);
+- impacted repositories and their current implementation status;
+- test vectors, validators and interoperability tests to update;
+- relay ingestion, storage, filter, federation and search consequences;
+- migration/backwards-compatibility requirements;
+- owner/agent, review and deployment gates.
+
+The canonical SIP-01 spec remains protocol truth; repository code and tests show implementation truth; Notion coordinates scope, ownership, decisions and handovers. Never treat a Notion proposal as an accepted protocol change. After meaningful work, update the linked project/task, evidence, conformance matrix and dated handover. Keep secrets and private browsing/query data out of the workspace. If Notion is unavailable, continue with the canonical spec/repositories and report the missing workspace write.
