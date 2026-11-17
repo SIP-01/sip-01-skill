@@ -6,13 +6,29 @@ Canonical site: https://github.com/NostrDanish/SIP-01 (spec `/spec`, tag registr
 
 | Repo | Role | Key files |
 |---|---|---|
-| **SIP-01** | Canonical spec + docs site | `public/spec/SIP-01.md`, `docs/IMPLEMENTATION-GUIDE.md`, `src/lib/sip01-utils.ts` (byte-compatible browser port — lift this for TS work) |
+| **SIP-01** | Canonical v1.3 spec + docs site | `public/spec/SIP-01.md`, `docs/IMPLEMENTATION-GUIDE.md`, `src/lib/sip01-utils.ts` (byte-compatible browser port — lift this for TS work) |
 | **UNCAGED-Index-Relay** | Validating index relay (NIP-50 operators, NIP-11 capabilities, NIP-77 federation) | `src/web-document.ts` (validator to match), `docs/SIP-01.md` (relay profile) |
 | **Crwalstr** | Browser web crawler, pure SIP-01 publisher, per-device indexer keys | `src/crawler/` (mirrors `webIndex.ts` byte-compatibly) |
 | **indexstr** | Distributed indexing network: sharded crawling + node heartbeats | `src/crawler/heartbeat.ts` (kind 16919 schema) |
 | **UNCAGED-ENGINE** | Reference search-engine / forkable template | `src/lib/webIndex.ts`, `src/lib/indexerIdentity.ts` |
 | **0xSearchstr** | Search engine, auto-indexes results via autosigner | reference client impl |
 | **0xPresearchstr** | Search engine: clearnet + tor/i2p crawling, keyword stakes | |
+
+## v1.3 optional capability hints
+
+Kind 39697 remains schema `v="1"`. Optional `role` and repeatable
+`proto` hints may describe a service document; an optional NIP-01 `a`
+coordinate may point to a separate kind-39698 ORBSTR capability announcement.
+The capability listing is not a job request and grants no permission to call
+its endpoint. Older Crawlstr/Indexstr generations can build the optional
+hints; the v3 products publish kind-39698 service listings. Confirm each
+repository's current support before claiming an integration.
+
+Role is a provider class (`agent`, `tool`, `model`, `api`, `compute`,
+`dataset`, `gateway`). Specialisations belong in repeatable capability
+topic tags, not new role values. Use ORBSTR for provider discovery and keep
+task inputs and private workflow state outside public events. Apply the
+approval-gated workflow in [the ORBSTR agent workflow guide](https://github.com/SIP-01/Orbstr/blob/main/docs/AGENT-WORKFLOWS.md).
 
 ## Crawler heartbeats — kind 16919 (replaceable)
 

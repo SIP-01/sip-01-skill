@@ -1,6 +1,6 @@
 # SIP-01 skill
 
-Portable Agent Skill package for the SIP-01 draft Search Index Protocol (kind 39697).
+Portable Agent Skill package for SIP-01 kind 39697 observations and the optional v1.3 ORBSTR capability-discovery companion.
 
 ## Install
 
